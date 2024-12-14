@@ -1,0 +1,234 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+struct fechita
+{
+    int horas;
+    int minutos;
+    int dia;
+
+};
+
+struct ventas
+{
+    string meses;
+    string surcusales;
+    string codigo_cliente;
+    string nombre_cliente;
+    fechita fecha;
+    string codigo_producto;
+    string descripcion_producto;
+    int precio;
+    int cantidad;
+    int valor_venta;
+
+};
+
+ventas almacenar_ventas[6][13];
+
+string meses[12] = { {"ENERO"}, {"FEBRERO"}, {"MARZO"}, {"ABRIL"}, {"MAYO"}, {"JUNIO"},
+                        {"JULIO"}, {"AGOSTO"}, {"SEPTIEMBRE"}, {"OCTUBRE"}, {"NOVIEMBRE"}, {"DICIEMBRE"} };
+
+string surcusales[5] = { {"NORTE"}, {"SUR"}, {"CENTRO"}, {"ESTE"}, {"OESTE"}, };
+
+string clientes[2][5] = { {"001", "002", "003", "004", "005"},
+                          {"Juan", "Pedro", "Fabian", "Felipe", "Jorge"} };
+
+string producto[2][5] = { {"001", "002", "003", "004", "005"},
+                          {"Televisor", "Computadora", "Celular", "Tablet", "Proyector"} };
+
+int precio_producto[5] = { {350}, {200},{ 150}, {165}, {500} };
+
+int mayor_cliente[5];
+
+int mayor_dia[2][30];
+
+int mayor_mes[12];
+
+
+void almacenar_estructura() {
+    for (int columna = 1; columna < 13; columna++) {
+
+        almacenar_ventas[0][columna].meses = meses[columna - 1];
+
+    }
+
+    cout << endl;
+
+    for (int fila = 1; fila < 6; fila++) {
+
+        almacenar_ventas[fila][0].surcusales = surcusales[fila - 1];
+
+    }
+
+    srand(time(NULL));
+    int aleatorio = 0;
+
+    for (int fila = 1; fila < 6; fila++)
+    {
+        for (int columna = 1; columna < 13; columna++)
+        {
+            aleatorio = rand() % 5;
+            almacenar_ventas[fila][columna].codigo_cliente = clientes[0][aleatorio];
+            almacenar_ventas[fila][columna].nombre_cliente = clientes[1][aleatorio];
+            almacenar_ventas[fila][columna].fecha.horas = rand() % 9 + 8;
+            almacenar_ventas[fila][columna].fecha.minutos = rand() % 59;
+            almacenar_ventas[fila][columna].fecha.dia = rand() % 29 + 1;
+            almacenar_ventas[fila][columna].codigo_producto = producto[0][aleatorio];
+            almacenar_ventas[fila][columna].descripcion_producto = producto[1][aleatorio];
+            almacenar_ventas[fila][columna].precio = precio_producto[aleatorio];
+            almacenar_ventas[fila][columna].cantidad = rand() % 9 + 1;
+            almacenar_ventas[fila][columna].valor_venta = almacenar_ventas[fila][columna].cantidad * almacenar_ventas[fila][columna].precio;
+        }
+    }
+
+}
+
+void mostrar() {
+    int posx = 5, posy = 0;
+    almacenar_ventas[0][0].meses = "      ";
+    for (int fila = 1; fila < 6; fila++) {
+        cout << "\t" << almacenar_ventas[fila][0].surcusales << endl << endl;
+        for (int columna = 1; columna < 13; columna++) {
+            cout << almacenar_ventas[0][columna].meses << endl << endl;
+            cout << "Codigo_Cliente: " << almacenar_ventas[fila][columna].codigo_cliente << endl;
+            cout << "Cliente: " << almacenar_ventas[fila][columna].nombre_cliente << endl;
+            cout << "Hora: " << almacenar_ventas[fila][columna].fecha.horas << ":";
+            cout << almacenar_ventas[fila][columna].fecha.minutos << " ";
+            cout << "Dia: " << almacenar_ventas[fila][columna].fecha.dia << endl;
+            cout << "Codigo_Producto: " << almacenar_ventas[fila][columna].codigo_producto << endl;
+            cout << "Descripcion_Producto: " << almacenar_ventas[fila][columna].descripcion_producto << endl;
+            cout << "Precio: " << almacenar_ventas[fila][columna].precio << endl;
+            cout << "Cantidad: " << almacenar_ventas[fila][columna].cantidad << endl;
+            cout << "Valor_Venta: " << almacenar_ventas[fila][columna].valor_venta << endl << endl;
+        }
+        cout << endl << endl;
+    }
+
+}
+
+void cliente_mayor_compras() {
+    int contador = 0;
+
+    cout << "\tVentas por clientes" << endl;
+    for (int i = 0; i < 5; i++) {
+        contador = 0;
+        for (int fila = 1; fila < 6; fila++) {
+            for (int columna = 1; columna < 13; columna++) {
+
+                if (almacenar_ventas[fila][columna].codigo_cliente == clientes[0][i]) {
+
+                    contador++;
+                }
+            }
+        }
+        mayor_cliente[i] = contador;
+
+        cout << "Codigo_cliente: " << clientes[0][i] << "   Nombre_cliente:" << clientes[1][i] << "   Ventas: " << mayor_cliente[i] << endl << endl;
+    }
+
+    int num_mayor = mayor_cliente[0];
+    int pos_mayor = 0;
+
+    for (int i = 1; i < 5; i++) {
+        if (mayor_cliente[i] > num_mayor) {
+            num_mayor = mayor_cliente[i];
+            pos_mayor = i;
+        }
+    }
+
+    cout << "\tCliente que mas ha comprado";
+    cout << endl << "Codigo_Cliente: " << clientes[0][pos_mayor] << "   Nombre_Cliente: " << clientes[1][pos_mayor];
+    cout << endl << "Cuantas veces compro: " << mayor_cliente[pos_mayor];
+
+
+}
+
+void dia_mayor_ventas() {
+
+    for (int i = 0; i < 30; i++) {
+        mayor_dia[0][i] = i + 1;
+    }
+
+    int contador = 0;
+    for (int i = 0; i < 30; i++) {
+        contador = 0;
+        for (int fila = 1; fila < 6; fila++) {
+            for (int columna = 1; columna < 13; columna++) {
+
+                if (almacenar_ventas[fila][columna].fecha.dia == mayor_dia[0][i]) {
+
+                    contador++;
+                }
+            }
+        }
+        mayor_dia[1][i] = contador;
+    }
+
+    int num_mayor = mayor_dia[1][0];
+    int pos_mayor = 0;
+
+    for (int i = 1; i < 30; i++) {
+        if (mayor_dia[1][i] > num_mayor) {
+            num_mayor = mayor_dia[1][i];
+            pos_mayor = i;
+        }
+    }
+
+    cout << endl << endl << "\tDia o Dias con mas ventas se ha hecho";
+    cout << endl << "Dia: " << mayor_dia[0][pos_mayor] << "   Ventas: " << mayor_dia[1][pos_mayor];
+
+    for (int i = 0; i < 30; i++) {
+        if (i != pos_mayor) {
+            if (mayor_dia[1][pos_mayor] == mayor_dia[1][i]) {
+                cout << endl << "Dia: " << mayor_dia[0][i] << "   Ventas: " << mayor_dia[1][i];
+            }
+        }
+    }
+}
+
+void total_ventas_mes_mayor() {
+
+    cout << endl << endl << "\tTotal de ventas por mes" << endl;
+    int contador = 0;
+    
+    
+        for (int columna = 1; columna < 13; columna++) {
+            contador = 0;
+            for (int fila = 1; fila < 6; fila++) {
+                mayor_mes[columna - 1] = mayor_mes[columna - 1] + almacenar_ventas[fila][columna].valor_venta;
+            } 
+            cout << "Mes: " << almacenar_ventas[0][columna].meses << "   Ventas: " << mayor_mes[columna - 1] << endl;
+
+        }
+
+        int num_mayor = mayor_mes[0];
+        int pos_mayor = 0;
+
+        for (int i = 1; i < 12; i++) {
+            if (mayor_mes[i] > num_mayor) {
+                num_mayor = mayor_mes[i];
+                pos_mayor = i;
+            }
+        }
+
+        cout << endl << endl << "\tMes que mas se vendio" << endl;
+        cout << "Mes: " << almacenar_ventas[0][pos_mayor + 1].meses << "  Ventas:" << mayor_mes[pos_mayor] << endl;
+
+       
+
+}
+
+int main() {
+    cout << "AlMACENAMIENTO DE VENTAS" << endl;
+
+    almacenar_estructura();
+    mostrar();
+    cliente_mayor_compras();
+    dia_mayor_ventas();
+    total_ventas_mes_mayor();
+
+    cout << endl;
+}
